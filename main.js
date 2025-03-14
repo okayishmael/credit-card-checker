@@ -39,18 +39,9 @@ const batch = [
 ];
 
 // Add your functions below:
-
-//Convert Credit Card string number in an array
-function convertCreditCard(creditCardString) {
-  let newArrayNumber = [];
-  for (let i = 0; i < creditCardString.length; i++) {
-    newArrayNumber.push(Number(creditCardString[i]));
-  }
-  //console.log(newArrayNumber);
-  return newArrayNumber;
-}
-
+// Function to validate credit card numbers using the Luhn algorithm
 function validateCred(card) {
+  // Step 1: Start from the second-to-last digit and move to the left
   let sum = 0;
   let shouldDouble = false;
 
@@ -78,7 +69,9 @@ function validateCred(card) {
   return sum % 10 === 0;
 }
 
-// Function to find invalid cards from a nested array of card numbers
+console.log(validateCred(valid4));
+
+// Function to find invalid credit card numbers
 function findInvalidCards(cards) {
   let invalidCardsArr = [];
 
@@ -96,44 +89,38 @@ console.log(findInvalidCards(batch));
 
 //==========================
 
+// Function to identify companies issuing invalid credit cards
 function idInvalidCardCompanies(invalidcards) {
   invalidcards = findInvalidCards(invalidcards);
-  const invalidCardCompanies = [];
+  const invalidCardCompanies = new Set();
 
   // Loop through invalidcards and list of card companies they belong to.
-  for (let i = 0; i <= invalidcards.length; i++) {
-    if (invalidcards[i]) {
-      if (invalidcards[i][0] === 3) {
-        if (!invalidCardCompanies.includes("Amex")) {
-          invalidCardCompanies.push("Amex");
-        }
-      } else if (invalidcards[i][0] === 4) {
-        if (!invalidCardCompanies.includes("Visa")) {
-          invalidCardCompanies.push("Visa");
-        }
-      } else if (invalidcards[i][0] === 5) {
-        if (!invalidCardCompanies.includes("MasterCard")) {
-          invalidCardCompanies.push("MasterCard");
-        }
-      } else if (invalidcards[i][0] === 6) {
-        if (!invalidCardCompanies.includes("Discover")) {
-          invalidCardCompanies.push("Discover");
-        }
-      } else {
-        return `Company not found.`;
-      }
+  for (let i = 0; i < invalidcards.length; i++) {
+    switch (invalidcards[i][0]) {
+      case 3:
+        invalidCardCompanies.add("Amex");
+        break;
+      case 4:
+        invalidCardCompanies.add("Visa");
+        break;
+      case 5:
+        invalidCardCompanies.add("MasterCard");
+        break;
+      case 6:
+        invalidCardCompanies.add("Discover");
+        break;
+      default:
+        console.log("Company not found.");
     }
   }
   return invalidCardCompanies;
 }
-
-// Print a valid, an invalid and a mystery card
-console.log(validateCred(valid3));
-console.log(validateCred(invalid3));
-console.log(validateCred(mystery4));
-
-// Pint invalid Cards Companies
 console.log(idInvalidCardCompanies(batch));
 
-// Print true or false if valid or not using srting.
-console.log(validateCred(convertCreditCard("4532444326223194")));
+// Convert string of card numbers into an array of numbers
+function convertStringToArray(cardString) {
+  return cardString.split("").map(Number);
+}
+
+// Example usage:
+console.log(convertStringToArray("4539677908016808")); // [4, 5, 3, 9, 6, 7, 7, 9, 0, 8, 0, 1, 6, 8, 0, 8]
